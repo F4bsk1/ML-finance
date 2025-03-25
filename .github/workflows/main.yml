@@ -26,4 +26,4 @@ jobs:
     - name: Run Fetch News Script
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-      run: python googleRSS.py
+      run: python googRSS.py
