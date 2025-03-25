@@ -2,8 +2,8 @@ name: Fetch News Every 12 Hours
 
 on:
   schedule:
-    - cron: "0 */12 * * *"  # Runs every 12 hours
-  workflow_dispatch:  # Allows you to manually trigger the workflow
+    - cron: '0 */12 * * *'  # Runs every 12 hours
+  workflow_dispatch:  # Allows manual trigger from the Actions tab
 
 jobs:
   fetch-news:
@@ -23,10 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install feedparser google-cloud-bigquery pandas
 
-    - name: Run News Fetching Script
+    - name: Run Fetch News Script
       env:
-        GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
-      run: |
-        echo "${GOOGLE_APPLICATION_CREDENTIALS_JSON}" > key.json
-        export GOOGLE_APPLICATION_CREDENTIALS=key.json
-        python your_script.py
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      run: python googleRSS.py
