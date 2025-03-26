@@ -2,8 +2,8 @@ name: Fetch News
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # Runs every 12 hours
-  workflow_dispatch:  # Allows manual trigger
+    - cron: "0 */12 * * *"  # Every 12 hours
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   fetch_news:
@@ -14,20 +14,19 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: '3.12'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install feedparser pandas google-cloud-bigquery
+        pip install google-cloud-bigquery pandas feedparser
 
-    - name: Set up GCP credentials
+    - name: Set GCP Credentials
+      run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > gcp_key.json
+
+    - name: Run News Fetching Script
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
-      run: |
-        echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > $GOOGLE_APPLICATION_CREDENTIALS
-
-    - name: Run Fetch News Script
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp_key.json
       run: python googRSS.py
