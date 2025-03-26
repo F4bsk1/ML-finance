@@ -7,12 +7,12 @@ from datetime import datetime, timezone
 # === Configuration ===
 COMPANIES = ["Apple", "Google", "Amazon", "Tesla", "Microsoft"]
 TICKERS = ["AAPL", "GOOGL", "AMZN", "TSLA", "MSFT"]
-TABLE_ID = "ml-finance-454213.news_analysis.news"  
-JSON_KEY_PATH = "ml-finance-454213-70b2a4ca823a.json"
+TABLE_ID = "ml-finance-454213.news_analysis.news"  # Replace with your table name
+JSON_KEY_PATH = "ml-finance-454213-70b2a4ca823a.json"   # Path to your service account JSON key
 
 def fetch_news():
     news_data = []
-    now = datetime.now(timezone.utc) 
+    now = datetime.now(timezone.utc)  # Get current UTC time
     for company, ticker in zip(COMPANIES, TICKERS):
         query = quote(f"{company} stock OR {company} financial news")
         url = f"https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
@@ -35,11 +35,11 @@ def fetch_news():
     return news_data
 
 def upload_to_bigquery(news_data, table_id):
-    credentials = service_account.Credentials.from_service_account_file("gcp_key.json")
-    client = bigquery.Client(credentials=credentials, project=credentials.project_id)    df = pd.DataFrame(news_data)
+    client = bigquery.Client.from_service_account_json(JSON_KEY_PATH)
+    df = pd.DataFrame(news_data)
     
     if df.empty:
-        print("No data to upload.")
+        print("⚠️ No new data to upload.")
         return
 
     # Fetch existing titles in the table to avoid duplicates
@@ -50,7 +50,7 @@ def upload_to_bigquery(news_data, table_id):
     df = df[~df['title'].isin(existing_titles)]
     
     if df.empty:
-        print("No new articles to upload after filtering duplicates.")
+        print("✅ No new articles to upload after filtering duplicates.")
         return
 
     job_config = bigquery.LoadJobConfig(
@@ -66,9 +66,9 @@ def upload_to_bigquery(news_data, table_id):
     try:
         job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
         job.result()  # Wait for the upload to complete
-        print(f"Uploaded {len(df)} new articles to bigquery")
+        print(f"✅ Successfully uploaded {len(df)} new articles to BigQuery!")
     except Exception as e:
-        print(f" Error uploading data to bigquery: {e}")
+        print(f"❌ Error uploading data to BigQuery: {e}")
 
 if __name__ == "__main__":
     news_data = fetch_news()
