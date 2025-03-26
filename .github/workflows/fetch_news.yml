@@ -2,15 +2,15 @@ name: Fetch News & Upload to BigQuery
 
 on:
   schedule:
-    - cron: '0 */12 * * *'
-  workflow_dispatch:
+    - cron: '0 */12 * * *'  # Runs every 12 hours
+  workflow_dispatch:  # Allows you to manually trigger the workflow
 
 jobs:
-  fetch-and-upload:
+  fetch_and_upload:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
+    - name: Checkout repository
       uses: actions/checkout@v3
 
     - name: Set up Python
@@ -18,26 +18,17 @@ jobs:
       with:
         python-version: '3.12'
 
-    - name: Install Dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install google-cloud-bigquery pandas feedparser
 
-    - name: Save GCP Credentials
-      run: |
-        echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > ml-finance-454213-70b2a4ca823a.json
-      shell: bash
-
-    - name: Check if JSON File Exists
-      run: |
-        if [ -f ml-finance-454213-70b2a4ca823a.json ]; then 
-          echo "✅ JSON Key file successfully created."
-        else
-          echo "❌ JSON Key file is missing."
-          exit 1
-        fi
-
-    - name: Run Script
+    - name: Prepare GCP Credentials
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: "${{ github.workspace }}/ml-finance-454213-70b2a4ca823a.json"
+        GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
+      run: |
+        echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > gcp_key.json
+        export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp_key.json
+
+    - name: Run news fetching script
       run: python googRSS.py
