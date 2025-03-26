@@ -26,8 +26,8 @@ jobs:
       - name: Create service account key file
         run: |
           cat <<'EOF' > keyfile.json
-      ${{ secrets.GCP_CREDENTIALS }}
-      EOF
+          ${{ secrets.GCP_CREDENTIALS }}
+          EOF
 
       - name: Run the news script
         env:
