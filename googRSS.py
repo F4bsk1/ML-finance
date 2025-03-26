@@ -35,8 +35,8 @@ def fetch_news():
     return news_data
 
 def upload_to_bigquery(news_data, table_id):
-    client = bigquery.Client()  # Uses environment variable set by the workflow
-    df = pd.DataFrame(news_data)
+    credentials = service_account.Credentials.from_service_account_file("gcp_key.json")
+    client = bigquery.Client(credentials=credentials, project=credentials.project_id)    df = pd.DataFrame(news_data)
     
     if df.empty:
         print("No data to upload.")
