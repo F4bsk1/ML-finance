@@ -3,7 +3,7 @@ name: Run News Script
 on:
   # Run on a schedule (adjust the cron schedule as needed)
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 */12 * * *'
   # Allow manual triggering
   workflow_dispatch:
 
