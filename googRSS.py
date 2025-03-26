@@ -3,6 +3,7 @@ import pandas as pd
 from google.cloud import bigquery
 from urllib.parse import quote
 from datetime import datetime, timezone
+import os
 
 # === Configuration ===
 COMPANIES = ["Apple", "Google", "Amazon", "Tesla", "Microsoft"]
