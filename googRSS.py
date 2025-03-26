@@ -3,10 +3,6 @@ import pandas as pd
 from google.cloud import bigquery
 from urllib.parse import quote
 from datetime import datetime, timezone
-import json
-import os
-from google.oauth2 import service_account
-
 
 # === Configuration ===
 COMPANIES = ["Apple", "Google", "Amazon", "Tesla", "Microsoft"]
@@ -39,13 +35,7 @@ def fetch_news():
     return news_data
 
 def upload_to_bigquery(news_data, table_id):
-    with open(os.getenv('GOOGLE_APPLICATION_CREDENTIALS')) as f:
-        key_data = json.load(f)
-        
-    credentials = service_account.Credentials.from_service_account_info(key_data)
-    
-    # Create a BigQuery client with the loaded credentials
-    client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+    client = bigquery.Client.from_service_account_json(JSON_KEY_PATH)
     df = pd.DataFrame(news_data)
     
     if df.empty:
