@@ -37,9 +37,9 @@ def fetch_news():
 
 def upload_to_bigquery(news_data, table_id):
     if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
-        client = bigquery.Client()  # Uses credentials from the environment variable
+        client = bigquery.Client()  # Automatically uses the key file specified by GOOGLE_APPLICATION_CREDENTIALS
     else:
-        client = bigquery.Client.from_service_account_json(JSON_KEY_PATH)
+        client = bigquery.Client.from_service_account_json("ml-finance-454213-70b2a4ca823a.json")
     df = pd.DataFrame(news_data)
     
     if df.empty:
