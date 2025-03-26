@@ -1,10 +1,10 @@
 name: Run News Script
 
 on:
-  # Schedule the workflow to run every hour (adjust cron as needed)
+  # Run on a schedule (adjust the cron schedule as needed)
   schedule:
     - cron: '0 * * * *'
-  # Also allow manual triggering
+  # Allow manual triggering
   workflow_dispatch:
 
 jobs:
@@ -24,9 +24,12 @@ jobs:
           pip install feedparser pandas google-cloud-bigquery
 
       - name: Create service account key file
-        run: echo "${{ secrets.GCP_CREDENTIALS }}" > keyfile.json
+        run: |
+          # Use printf to preserve the JSON formatting
+          printf '%s' "${{ secrets.GCP_CREDENTIALS }}" > keyfile.json
 
       - name: Run the news script
         env:
+          # Tell the BigQuery client to use this key file automatically
           GOOGLE_APPLICATION_CREDENTIALS: keyfile.json
-        run: python googRSS.py
+        run: python googleRSS.py
