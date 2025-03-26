@@ -35,7 +35,7 @@ def fetch_news():
     return news_data
 
 def upload_to_bigquery(news_data, table_id):
-    client = bigquery.Client.from_service_account_json(JSON_KEY_PATH)
+    client = bigquery.Client()  # Uses environment variable set by the workflow
     df = pd.DataFrame(news_data)
     
     if df.empty:
