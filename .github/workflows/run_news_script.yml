@@ -32,4 +32,4 @@ jobs:
         env:
           # Tell the BigQuery client to use this key file automatically
           GOOGLE_APPLICATION_CREDENTIALS: keyfile.json
-        run: python googleRSS.py
+        run: python googRSS.py
