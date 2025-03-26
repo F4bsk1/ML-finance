@@ -35,7 +35,10 @@ def fetch_news():
     return news_data
 
 def upload_to_bigquery(news_data, table_id):
-    client = bigquery.Client.from_service_account_json(JSON_KEY_PATH)
+    if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
+        client = bigquery.Client()  # Uses credentials from the environment variable
+    else:
+        client = bigquery.Client.from_service_account_json(JSON_KEY_PATH)
     df = pd.DataFrame(news_data)
     
     if df.empty:
