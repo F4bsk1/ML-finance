@@ -1,0 +1,32 @@
+name: Run News Script
+
+on:
+  # Schedule the workflow to run every hour (adjust cron as needed)
+  schedule:
+    - cron: '0 * * * *'
+  # Also allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  run_news_script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          pip install feedparser pandas google-cloud-bigquery
+
+      - name: Create service account key file
+        run: echo "${{ secrets.GCP_CREDENTIALS }}" > keyfile.json
+
+      - name: Run the news script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: keyfile.json
+        run: python googRSS.py
