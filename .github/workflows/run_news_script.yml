@@ -25,8 +25,7 @@ jobs:
 
       - name: Create service account key file
         run: |
-          # Use printf to preserve the JSON formatting
-          printf '%s' "${{ secrets.GCP_CREDENTIALS }}" > keyfile.json
+          echo -e "${{ secrets.GCP_CREDENTIALS }}" > keyfile.json
 
       - name: Run the news script
         env:
