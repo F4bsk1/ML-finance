@@ -1,31 +1,35 @@
-name: Fetch NewsAPI Data
+name: Run NewsAPI Script
 
 on:
+  # Run every 12 hours
   schedule:
-    - cron: "0 */12 * * *"  # Runs every 12 hours
-  workflow_dispatch:  # Allows manual triggering from GitHub Actions UI
+    - cron: '0 */12 * * *'
+  # Allow manual triggering
+  workflow_dispatch:
 
 jobs:
-  fetch-newsapi:
+  run_news_script:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install pandas google-cloud-bigquery newsapi-python pyarrow
 
-    - name: Set up Google Application Credentials
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}"
+      - name: Create service account key file
+        run: |
+          cat <<'EOF' > keyfile.json
+          ${{ secrets.GCP_CREDENTIALS }}
+          EOF
 
-    - name: Run NewsAPI Fetch Script
-      run: python newsAPI.py
+      - name: Run the NewsAPI script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: keyfile.json  # Tell BigQuery to use the key file
+        run: python newsAPI.py
