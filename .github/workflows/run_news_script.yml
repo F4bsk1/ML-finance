@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install feedparser pandas google-cloud-bigquery
+          pip install feedparser pandas google-cloud-bigquery pyarrow
 
       - name: Create service account key file
         run: |
