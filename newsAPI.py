@@ -4,6 +4,7 @@ from google.cloud import bigquery
 import time
 from datetime import datetime, timedelta
 from google.oauth2 import service_account
+import os
 
 
 # Initialize NewsAPI client with your API key
