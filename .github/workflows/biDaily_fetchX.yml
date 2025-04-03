@@ -2,7 +2,7 @@ name: Run X API Bi Daily
 
 on:
   schedule:
-    - cron: "0 */12 * * *"  # Runs every 12 hours
+    - cron: "15 */12 * * *"  # Runs every 12 hours
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -26,15 +26,12 @@ jobs:
         run: |
           echo "TWITTER_API_KEY=${{ secrets.TWITTER_API_KEY }}" >> $GITHUB_ENV
 
-      - name: Create service account key file
-        run: |
-          cat <<'EOF' > keyfile.json
-          ${{ secrets.GCP_CREDENTIALS }}
-          EOF
-
-      - name: Run the X script
+      - name: Authenticate with Google Cloud
         env:
-          # Tell the BigQuery client to use this key file automatically
-          GOOGLE_APPLICATION_CREDENTIALS: keyfile.json
+          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+        run: |
+          echo "$GOOGLE_CREDENTIALS_JSON" > credentials.json
+          export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
+
+      - name: Run X API
         run: python fetchX.py
-     
