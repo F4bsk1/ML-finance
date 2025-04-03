@@ -30,7 +30,7 @@ jobs:
         env:
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS}}
         run: |
-          echo "$GOOGLE_CREDENTIALS_JSON" > credentials.json
+          echo "$GOOGLE_APPLICATION_CREDENTIALS" > credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
 
       - name: Run X API
