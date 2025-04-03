@@ -7,11 +7,7 @@ from datetime import datetime, timedelta
 load_dotenv()
 
 # Load Google Cloud credentials
-GOOGLE_CREDENTIALS_PATH = "credentials.json"
-if os.path.exists(GOOGLE_CREDENTIALS_PATH):
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_CREDENTIALS_PATH
-else:
-    raise ValueError("❌ Google Cloud credentials file not found!")
+JSON_KEY_PATH = "ml-finance-454213-70b2a4ca823a.json"   # Path to your service account JSON key
 
 client = bigquery.Client()
 dataset_id = "ml-finance-454213.x_analysis"
