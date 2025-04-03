@@ -87,8 +87,7 @@ def build_stock_queries(company_keywords):
 
 def automateCompanyTweets():
     for company_name, keywords in COMPANIES.items():
-        query = build_stock_queries(keywords)
-        query += f" since:{QUERY_DATE}"
+        query = f"since:{QUERY_DATE} {build_stock_queries(keywords)}"
         ticker_symbol = keywords[0]
         pages = 0
         cursor = ""
