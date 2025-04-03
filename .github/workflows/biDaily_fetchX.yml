@@ -26,12 +26,15 @@ jobs:
         run: |
           echo "TWITTER_API_KEY=${{ secrets.TWITTER_API_KEY }}" >> $GITHUB_ENV
 
-      - name: Authenticate with Google Cloud
-        env:
-          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS}}
+      - name: Create service account key file
         run: |
-          echo "$GOOGLE_APPLICATION_CREDENTIALS" > credentials.json
-          export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
+          cat <<'EOF' > keyfile.json
+          ${{ secrets.GCP_CREDENTIALS }}
+          EOF
 
-      - name: Run X API
+      - name: Run the X script
+        env:
+          # Tell the BigQuery client to use this key file automatically
+          GOOGLE_APPLICATION_CREDENTIALS: keyfile.json
         run: python fetchX.py
+     
