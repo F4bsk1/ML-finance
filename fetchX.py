@@ -66,7 +66,6 @@ def filterTweets(tweets, ticker):
             "retweets": tweet.get("retweetCount"),
             "replies": tweet.get("replyCount"),
             "views": tweet.get("viewCount"),
-            "sentiment": [],
             "ticker": ticker
         }
         filtered_tweets.append(filtered_tweet)
