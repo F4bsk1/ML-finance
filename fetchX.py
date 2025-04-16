@@ -21,7 +21,7 @@ x_tweets = f"{dataset_id}.x_tweets"
 QUERY_DATE = (datetime.utcnow() - timedelta(hours=12)).strftime("%Y-%m-%d_%H:%M:%S_UTC")
 BASE_URL = "https://api.twitterapi.io/twitter/"
 HEADERS = {
-    "X-API-Key": os.getenv("TWITTER_API_KEY"),
+    "X-API-Key": os.getenv("NEW_TWITTER_API_KEY"),
 }
 COMPANIES = {
     "Apple": ["AAPL", "Apple", "Apple Inc"],
