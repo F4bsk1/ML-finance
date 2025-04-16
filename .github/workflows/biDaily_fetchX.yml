@@ -24,7 +24,7 @@ jobs:
 
       - name: Setup Environment Variables
         run: |
-          echo "TWITTER_API_KEY=${{ secrets.TWITTER_API_KEY }}" >> $GITHUB_ENV
+          echo "NEW_TWITTER_API_KEY=${{ secrets.TWITTER_API_KEY }}" >> $GITHUB_ENV
 
       - name: Authenticate with Google Cloud
         env:
