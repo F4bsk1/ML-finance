@@ -32,4 +32,4 @@ jobs:
       - name: Run the NewsAPI script
         env:
           GOOGLE_APPLICATION_CREDENTIALS: keyfile.json  # Tell BigQuery to use the key file
-        run: python newsAPI.py
+        #run: python newsAPI.py #uncoment to run
